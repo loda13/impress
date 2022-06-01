@@ -1,11 +1,9 @@
 # impress
 go impress
 
-常用go语言实现with gin 展示
-
-reach from 127.0.0.1:8080
-
+常用go语言实现
 -----
+
 #### 七牛云
 
 set GOPROXY=https://goproxy.cn,direct 
@@ -17,7 +15,7 @@ set GOPROXY=https://goproxy.io,direct
 go.mode
 ---
 
-#### go.mode生成sum，下载包
+#### go.mode
 
 go mod tidy
 
