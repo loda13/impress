@@ -15,7 +15,7 @@ import (
 
 func Count() {
 	//读取文件，仅适用于英文文档
-	ss, _ := ioutil.ReadFile("words.txt")
+	ss, _ := ioutil.ReadFile("./describe/words.txt")
 
 	//sl := strings.Fields(string(ss))
 	//sl := strings.Split(string(ss), " ")
