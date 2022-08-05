@@ -12,10 +12,10 @@ set GOPROXY=https://goproxy.cn,direct
 
 set GOPROXY=https://goproxy.io,direct
 
-go.mode
+go mod
 ---
 
-#### go.mode
+#### go mod
 
 go mod tidy
 
