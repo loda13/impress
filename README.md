@@ -28,3 +28,7 @@ go mod vendor
 gopath=C:\GO
 
 path=C:\GO\bin
+
+#### 环境for wsl
+
+go env -w GOPROXY=https://goproxy.cn,direct 
