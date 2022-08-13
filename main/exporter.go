@@ -1,39 +1,71 @@
 package main
 
-import (
-	"fmt"
-	"github.com/prometheus/client_golang/prometheus/promhttp"
-	"github.com/shirou/gopsutil/v3/cpu"
-	"github.com/shirou/gopsutil/v3/mem"
-	"net/http"
-)
-
 /**
  * @Author: tang
  * @mail: yuetang2
  * @Date: 2022/8/9 16:21
  * @Desc:
  */
-const DefaultPerCPU bool = false
 
-func metrics() {
-	v, _ := mem.VirtualMemory()
+import (
+	"fmt"
+	"github.com/shirou/gopsutil/v3/cpu"
+	"github.com/shirou/gopsutil/v3/mem"
+	"log"
+	"net/http"
+	"time"
 
-	// almost every return value is a struct
-	fmt.Printf("Total: %v, Free:%v, UsedPercent:%f%%\n", v.Total, v.Free, v.UsedPercent)
+	"github.com/prometheus/client_golang/prometheus"
+	"github.com/prometheus/client_golang/prometheus/promhttp"
+)
 
-	// convert to JSON. String() is also implemented
-	fmt.Println(v)
+var (
+	cpupercent = prometheus.NewGauge(prometheus.GaugeOpts{
+		Name: "cpupercent",
+		Help: "Current percent of the CPU.",
+	})
+	mempercent = prometheus.NewGauge(prometheus.GaugeOpts{
+		Name: "mempercent",
+		Help: "Current percent of the MEM.",
+	})
+)
+
+func GetCpuPercent() {
+	cpuInfos, err := cpu.Info()
+	if err != nil {
+		fmt.Printf("get cpu info failed, err:%v", err)
+	}
+	for _, ci := range cpuInfos {
+		fmt.Println(ci)
+	}
+	for {
+		percent, _ := cpu.Percent(time.Second, false)
+		//fmt.Printf("cpu percent:%v\n", percent)
+		//return percent[len(percent)-1]
+		cpupercent.Set(percent[len(percent)-1])
+	}
 
 }
-func fetchCPU() ([]cpu.TimesStat, error) {
-	return cpu.Times(DefaultPerCPU)
+
+func GetMemPercent() {
+	memInfo, _ := mem.VirtualMemory()
+	//return memInfo.UsedPercent
+	mempercent.Set(memInfo.UsedPercent)
+}
+
+func init() {
+	// Metrics have to be registered to be exposed:
+	prometheus.MustRegister(cpupercent)
+	prometheus.MustRegister(mempercent)
 }
 
 func main() {
-	metrics()
-	fetchCPU()
-
+	go GetCpuPercent()
+	go GetMemPercent()
+	//cpupercent.Set(GetCpuPercent())
+	//mempercent.Set(GetMemPercent())
+	// The Handler function provides a default handler to expose metrics
+	// via an HTTP server. "/metrics" is the usual endpoint for that.
 	http.Handle("/metrics", promhttp.Handler())
-	http.ListenAndServe(":2112", nil)
+	log.Fatal(http.ListenAndServe(":8080", nil))
 }
