@@ -1,0 +1,7 @@
+要求：实现进程监控指标暴露
+细节：
+1、自行抓取需监控的进程(可直接用autoCreateProcess方法采集)
+2、实时抓取process表进程的cpu usage和memory usage两个指标以prometheus格式暴露至/metrics路由。
+ 3、使用grafana将数据可视化(不强制要求，加分项)
+效果：prometheus能够抓取127.0.0.1:8992/metrics 暴露的的CPU和内存指标
+作业形式：1、完整代码；2、 metrics页面截图；3、grafana的截图(不强制要求，加分项)
