@@ -1,4 +1,4 @@
 # impress
-go impress
+go impress： common go accomplish
 
-metrics for process's cpu & mem usage
+metrics ： process's cpu & mem usage
